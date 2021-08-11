@@ -1,0 +1,15 @@
+*.pyc
+cache/
+venv/
+.idea/
+*.nohup
+*.pid
+*.log
+*.backup
+*.tfstate
+.terraform/
+
+./.env
+.skew
+*.db
+scvamp.code-workspace

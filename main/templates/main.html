@@ -1,0 +1,44 @@
+{% extends 'layout.html' %}
+{% block content %}
+
+    <img src="/static/img/scventures-identifier.png" style="float:left; padding-right:20px;"/>
+    </br>
+    </br>
+    <h3 class="sub-header">SC Ventures AWS Monitoring Project</h3>
+    <div>
+        <div>
+            </br>
+            <h4>Venture projects</h4>
+            The SC Vamp application is currently monitoring the following projects:
+            </br></br>
+            <ul>
+                {% for project in g.projects %}
+                <li><a href="projects/{{project.name|lower}}}">{{project.name}}</a></li>
+                {% endfor %}
+            </ul>
+            <hr>
+            <h4>SCV Accounts</h4>
+            Because we believe that we should be held to the same standards as the other projects, we also monitor our own AWS accounts.
+            <ul>
+                <li><a href="/scv">SC Ventures</a></li>
+            </ul>
+            <hr>
+            <h4>AWS Platform Security</h4>
+            <div>
+                AWS Platform Security information is provided for each of the above listed SC Ventures projects.</br>
+                Select the project of interest from the menu on the left, under the "SC Ventures Projects" drop-down.
+            </div>
+            <hr>
+            
+            <h4>AWS Trusted Advisor</h4>
+            <div>
+                AWS Trusted Advisor information is provided for each of the above listed SC Ventures projects.</br>
+                Select the project of interest from the menu on the left, under the "SC Ventures Projects" drop-down</br>
+                and select the "AWS Trusted Advisor" tab.  
+            </div>
+            <hr>
+            
+        </div>
+    </div>
+{% endblock %}      
+            

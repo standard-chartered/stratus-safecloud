@@ -1,0 +1,94 @@
+{% extends 'layout.html' %}
+{% block content %}
+
+    <img src="../static/img/{{ project.name|lower }}-logo.png" style="float:left;"/>
+    <script src="/static/js/list.js"></script>
+    </br></br>
+    <div class="tab-content">
+        <div id="{{ project.name|lower }}" class="tab-pane active">            
+            <h4>AWS Platform Security - Details</h4>
+            This page shows the full details of the AWS Security scores for the <strong>{{ account }}</strong> account ({{ account_number }}) as measured against the following standards:
+            </br></br>
+            {% if not results %}
+                <font color="red">
+                    <strong>No AWS Security Hub results are available for the {{ account }} account</strong>
+                </font>
+            {% else %}
+                {% for standard in results %}
+                    <div id="details{{ loop.index }}"></br>
+                    <table border=1>
+                      <thead>
+                        <tr>
+                            <td>
+                                <h4>{{ standard }}</h4>
+                            </td>
+                            <td colspan="4">
+                                <input id="search{{ loop.index }}" class="search form-control" placeholder="Filter"/>
+                            </td>
+                        </tr>
+                        <tr>
+                            <th class="sort clickable no-select" data-sort="rule">Benchmark Rule</th>
+                            <th class="sort clickable no-select" data-sort="arn">AWS Resource ARN</th>
+                            <th class="sort clickable no-select" data-sort="severity">Severity</th>
+                            <th class="sort clickable no-select" data-sort="status">Status</th>
+                             <th class="sort clickable no-select" data-sort="remediation">Remediation</th>
+                        </tr>
+                      </thead>
+                      <tbody class="list">
+                        {% for item in results[standard] %}
+                            <tr>
+                                <td class="rule">
+                                    {{ item['Title'] }}
+                                </td>
+                                <td class="arn">
+                                    {{ item['Resources'][0]['Id'] }}
+                                </td>
+                                <td class="severity">
+                                    {{ item['Severity']['Label'] }}
+                                </td>
+                                <td class="status">
+                                    {% if item['Compliance']['Status'] == 'PASSED' %}
+                                    <font color='green'>
+                                    {% elif item['Compliance']['Status'] == 'WARNING' %}
+                                    <font color='#FF8C00'>
+                                    {% else %}
+                                    <font color='red'>
+                                    {% endif %}
+                                    {{ item['Compliance']['Status'] }}
+                                    </font>
+                                </td>
+                                {% if item['Compliance']['Status'] != 'PASSED' %}
+                                    <td style="text-align:center" class="remediation">                                        
+                                        <a target="_blank" href="{{ item['Remediation']['Recommendation']['Url'] }}">
+                                            <img src="../../static/img/external-link.png" width="15" height="15"/>
+                                        </a>
+                                    </td>
+                                {% else %}
+                                    <td class="remediation">
+                                    </td>
+                                {% endif %}
+                            </tr>
+                        {% endfor %}
+                      </tbody>
+                    </table>
+                    </div>
+                    </br></br>
+                {% endfor %}
+            {% endif %}
+        </div>
+    </div>
+    <script>
+        var options = {
+            valueNames: ['rule', 'arn', 'severity', 'status', 'remediation']
+        };
+        {% for standard in results %}
+            var detailsList{{ loop.index }} = new List('details{{ loop.index }}', options);
+        {% endfor %}
+    </script>
+
+{% endblock %}
+          
+          
+
+
+ 

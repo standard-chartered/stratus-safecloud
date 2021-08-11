@@ -1,0 +1,522 @@
+{% extends 'layout.html' %}
+{% block content %}
+
+<script src="/static/js/gauge.min.js"></script>
+<script src="/static/js/list.js"></script>
+
+<img src="/static/img/projects/{{ project.name|lower }}-logo.png" style="float:left;" />
+</br>
+</br>
+<h4>{{ project.name }} - Project Description</h4>
+<div>
+  A short description of the project should go here.
+  </br></br>
+  <h4>Contact</h4>
+  <table border=1>
+    <tr>
+      <th>Name</th>
+      <th>Email</th>
+    </tr>
+    {% for contact in project.contacts %}
+    <tr>
+      <td>{{ contact.name }}</td>
+      <td><a href="{{ contact.email }}">{{ contact.email }}</a></td>
+    <tr>
+      {% endfor %}
+  </table>
+</div>
+<hr>
+
+<!-- Nav pills -->
+<ul class="nav nav-pills" id="nav-pills" role="tablist">
+  <li class="nav-item">
+    <a class="nav-link active" data-toggle="pill" href="#{{ project.name|lower }}-security">AWS Platform Security</a>
+  </li>
+  <li class="nav-item">
+    <a class="nav-link" data-toggle="pill" href="#{{ project.name|lower }}-resources">AWS Resources</a>
+  </li>
+  <li class="nav-item">
+    <a class="nav-link" data-toggle="pill" href="#{{ project.name|lower }}-trusted-advisor">AWS Trusted Advisor</a>
+  </li>
+  <li class="nav-item">
+    <a class="nav-link" data-toggle="pill" href="#{{ project.name|lower }}-config">AWS Config</a>
+  </li>
+  <li class="nav-item">
+    <a class="nav-link" data-toggle="pill" href="#{{ project.name|lower }}-ec2-instances">EC2 Instances</a>
+  </li>
+  <li class="nav-item">
+    <a class="nav-link" data-toggle="pill" href="#{{ project.name|lower }}-patch-compliance">Patch Compliance</a>
+  </li>
+</ul>
+
+
+<div class="tab-content">
+
+  <!-- start platform security -->
+  <div id="{{ project.name|lower }}-security" class="tab-pane active"></br>
+    <h4>{{ project.name }} AWS Platform Security</h4>
+    The following gauges show the score for each {{ project.name }} AWS Account measured against the following security
+    standards:
+    </br></br>
+    <ul>
+      <li>AWS Foundational Security Best Practices v1.0.0</li>
+      <li>CIS AWS Foundations Benchmark v1.2.0</li>
+    </ul>
+    Clicking on a gauge below will take you to a page giving full details of the best practice and benchmark scores for
+    the selected AWS account
+    <hr>
+    <table border=1>
+      <tr>
+        {% for item in scores %}
+        <td>
+          <table>
+            <tr>
+              <td style="text-align:center">
+                <a href="/projects/{{ project.name|lower }}/aws-security/{{ item }}"><strong>{{ scores[item]['account_name']
+                    }}</a></strong>
+              </td>
+            </tr>
+            <tr>
+              <td style="text-align:center">
+                <a href="/projects/{{ project.name|lower }}/aws-security/{{ item }}"><canvas
+                    id="gauge{{ loop.index }}" /></canvas></a>
+              </td>
+            </tr>
+            <tr>
+              {% if not scores[item]['data']|length %}
+              <td style="text-align:center">
+                <font color="red">No AWS Security Hub service
+              </td>
+              {% else %}
+              <td style="text-align:center">
+                <strong>Overall Security Score: {{ scores[item]['data']['percent'] }}<strong>
+              </td>
+              {% endif %}
+            </tr>
+          </table>
+        </td>
+        {% if loop.index % 3 == 0 %}
+      </tr>
+      <tr>
+        {% endif %}
+        {% endfor %}
+      </tr>
+    </table>
+    </br>
+    <p>Last updated: {{ last_update }}</p>
+    <hr>
+  </div>
+  <!-- end platform security -->
+
+  <!-- start resources -->
+  <div id="{{ project.name|lower }}-resources" class="tab-pane fade"></br>
+    <h4>{{ project.name }} AWS Resources</h4>
+    Click on the following links to see the resource usage for the {{ project.name }} project AWS accounts:
+    </br></br>
+    <ul>
+      {% for item in scores %}
+      <li>
+        <a href="/projects/{{ project.name|lower }}/resources/{{ item }}">
+          <font color="blue"><u>{{ scores[item]['account_name'] }}</u></font>
+        </a>
+      </li>
+      {% endfor %}
+    </ul>
+    <hr>
+  </div>
+  <!-- end resources -->
+
+  <!-- start trusted advisor -->
+  <div id="{{ project.name|lower }}-trusted-advisor" class="tab-pane fade"></br>
+    <h4>{{ project.name }} AWS Trusted Advisor</h4>
+    Note that any AWS Account names shown in red below are not subscribed to AWS Premium Support and therefore cannot
+    access Trusted Advisor data.
+    </br>
+    Note also that the numbers shown in the tables below refer to the number of <strong>checks</strong>. It does not
+    refer to
+    the number of resources that have been checked and a single check will be done on multiple resources.
+    </br></br>
+    <a href="{{ '/%s/trusted-advisor.csv' % project.name|lower }}">
+      <button class="btn btn-success">
+        <img width="32" height="32" src="/static/img/excel-logo.png" title="Save to Excel" />&nbsp;Export to Excel
+      </button>
+    </a>
+    <table>
+      <tr>
+        {% for account in ta_results %}
+        {% if ta_results[account]['data'] %}
+        <td style="padding:30px">
+          {% if ta_results[account]['data']['error'] %}
+          <h5 style="color: red">{{ ta_results[account]['account_name'] }}</h5>
+          {% else %}
+          <a href="/api/v1.1/{{ project.name|lower }}/aws-trusted-advisor/{{ ta_results[account]['env'] }}/details">
+            <font color="blue"><u>
+                <h5>{{ ta_results[account]['account_name'] }}
+              </u></h5>
+            </font>
+          </a>
+          {% endif %}
+          <table border=1>
+            <tr>
+              <td><strong>Category</strong></td>
+              <td><strong>OK</strong></td>
+              <td><strong>Warning</strong></td>
+              <td><strong>Error</strong></td>
+              <td><strong>Not Available</strong></td>
+            </tr>
+            {% for category in ta_results[account]['data']['categories'] %}
+            <tr>
+              <td>
+                <a
+                  href="/api/v1.1/{{ project.name|lower }}/aws-trusted-advisor/{{ ta_results[account]['env'] }}/category/{{ category }}">
+                  <font color="blue">{{ ta_results[account]['data']['categories'][category]['name'] }}</font>
+                </a>
+              </td>
+              {% if ta_results[account]['data']['categories'][category]['ok'] > 0 %}
+              <td style="text-align:center; color: green">
+                <a
+                  href="/api/v1.1/{{ project.name|lower }}/aws-trusted-advisor/{{ ta_results[account]['env'] }}/category/{{ category }}/ok">
+                  <u>{{ ta_results[account]['data']['categories'][category]['ok'] }}</u>
+                </a>
+              </td>
+              {% else %}
+              <td style="text-align:center">{{ ta_results[account]['data']['categories'][category]['ok'] }}</td>
+              {% endif %}
+              {% if ta_results[account]['data']['categories'][category]['warning'] > 0 %}
+              <td style="text-align:center; color: #FF9400">
+                <a
+                  href="/api/v1.1/{{ project.name|lower }}/aws-trusted-advisor/{{ ta_results[account]['env'] }}/category/{{ category }}/warning">
+                  <u>{{ ta_results[account]['data']['categories'][category]['warning'] }}</u>
+                </a>
+              </td>
+              {% else %}
+              <td style="text-align:center">{{ ta_results[account]['data']['categories'][category]['warning'] }}</td>
+              {% endif %}
+              {% if ta_results[account]['data']['categories'][category]['error'] > 0 %}
+              <td style="text-align:center; color: red">
+                <a
+                  href="/api/v1.1/{{ project.name|lower }}/aws-trusted-advisor/{{ ta_results[account]['env'] }}/category/{{ category }}/error">
+                  <u>{{ ta_results[account]['data']['categories'][category]['error'] }}</u>
+                </a>
+              </td>
+              {% else %}
+              <td style="text-align:center">{{ ta_results[account]['data']['categories'][category]['error'] }}</td>
+              {% endif %}
+              {% if ta_results[account]['data']['categories'][category]['not_available'] > 0 %}
+              <td style="text-align:center; color: blue">
+                <a
+                  href="/api/v1.1/{{ project.name|lower }}/aws-trusted-advisor/{{ ta_results[account]['env'] }}/category/{{ category }}/not_available">
+                  <u>{{ ta_results[account]['data']['categories'][category]['not_available'] }}</u>
+                </a>
+              </td>
+              {% else %}
+              <td style="text-align:center">{{ ta_results[account]['data']['categories'][category]['not_available'] }}
+              </td>
+              {% endif %}
+            </tr>
+            {% endfor %}
+          </table>
+        </td>
+        {% endif %}
+        {% if loop.index % 3 == 0 %}
+      </tr>
+      <tr>
+        {% endif %}
+        {% endfor %}
+      </tr>
+    </table>
+    </br>
+    <p>Last updated: {{ last_update }}</p>
+    <hr>
+  </div>
+  <!-- end trusted advisor -->
+
+
+<!-- start aws config -->
+<div id="{{ project.name|lower }}-config" class="tab-pane fade"></br>            
+  <div id="noncompliance">
+      <table border=1>
+      <thead>
+      <tr>
+          <td>
+              <h4>{{ project.name }} AWS Config Non-Compliance</h4>
+          </td>
+          <td colspan="3">
+              <input id="search" class="search form-control" placeholder="Filter"/>
+          </td>
+          <td style='text-align: center;'>
+              <a href="{{ '/%s/config.csv' % project.name|lower }}">
+                  <button class="btn btn-success" >
+                  <img width="32" height="32" src="/static/img/excel-logo.png" title="Save to Excel" />&nbsp;Export to Excel
+                  </button>
+              </a>
+          </td>
+      </tr>
+      <tr>
+          <th class="sort clickable no-select" data-sort="rulename">Rule Name</th>
+          <th class="sort clickable no-select" data-sort="resourceId">Resource Id</th>
+          <th class="sort clickable no-select" data-sort="resourceType">Resource Type</th>
+          <th class="sort clickable no-select" data-sort="region">Region</th>
+          <th class="sort clickable no-select" data-sort="accountname">Account Name</th>
+      </tr>
+      </thead>
+      <tbody class="list">
+          {% for item in config_data %}
+              {% for resource in item['resources'] %}
+              <tr>
+                  <td class="rulename">
+                      {{ item['rule_name'] }}
+                  </td>
+                  <td class="resourceId">
+                      {{ resource['resource_id'] }}
+                  </td>
+                  <td class="resourceType">
+                      {{ resource['resource_type'] }}
+                  </td>
+                  <td class="region">
+                      {{ item['region'] }}
+                  </td>
+                  <td class="accountname">
+                      {{ item['account_name'] }}
+                  </td>
+              </tr>
+              {% endfor %}
+          {% endfor %}
+      </tbody>
+      </table>
+  </div>
+  </br>
+  <p>Last updated: {{ last_update }}</p>            
+</div>
+<!-- end aws config -->
+
+<!-- start ec2 instances -->
+
+<div id="{{ project.name|lower }}-ec2-instances" class="tab-pane fade"></br>
+  <h4>{{ project.name }} EC2 Instances</h4>
+  All EC2 instances must be in approved AWS regions and must be managed by the AWS Systems Manager service (SSM)
+  </br></br>
+  <a href="{{ '/%s/ec2-instances.csv' % project.name|lower }}">
+      <button class="btn btn-success" >
+          <img width="32" height="32" src="/static/img/excel-logo.png" title="Save to Excel" />&nbsp;Export to Excel
+      </button>
+  </a>
+  <table>
+  <tr>
+  {% for account in ec2_data %}
+      {% if ec2_data[account]['data'] %}
+          <td style="padding:30px">
+              <a href="/api/v1.1/{{ project.name|lower }}/ec2-instances/{{ ec2_data[account]['env'] }}/details">
+                  <font color="blue"><u><h5>{{ ec2_data[account]['account_name'] }}</u></h5></font>
+              </a>
+              <table border=1>
+              <tr>
+                  <td><strong>Region</strong></td>
+                  <td><strong>EC2 Instance Count</strong></td>
+                  <td><strong>Managed</strong></td>
+                  <td><strong>Not Managed</strong></td>
+              </tr>
+              {% for region in ec2_data[account]['data'] %}
+              <tr>
+                  <td>
+                      {{ region }}
+                  </td>
+                  {% if ec2_data[account]['data'][region]['instance_count'] == 0 %}
+                  <td style="text-align:center; color:black">                            
+                      {{ ec2_data[account]['data'][region]['instance_count'] }}
+                  </td>
+                  <td style="text-align:center; color:black">
+                      {{ ec2_data[account]['data'][region]['ssm_managed'] }}
+                  </td>
+                  <td style="text-align:center; color:black">
+                      {{ ec2_data[account]['data'][region]['not_ssm_managed'] }}
+                  </td> 
+                  {% elif ec2_data[account]['data'][region]['ssm_managed'] == ec2_data[account]['data'][region]['instance_count'] %}
+                  <td style="text-align:center; color:green">
+                      {{ ec2_data[account]['data'][region]['instance_count'] }}
+                  </td>
+                  <td style="text-align:center; color:green">
+                      {{ ec2_data[account]['data'][region]['ssm_managed'] }}
+                  </td>
+                  <td style="text-align:center; color:green">
+                      {{ ec2_data[account]['data'][region]['not_ssm_managed'] }}
+                  </td> 
+                  {% elif ec2_data[account]['data'][region]['ssm_managed'] < ec2_data[account]['data'][region]['instance_count'] %}
+                      {% if ec2_data[account]['data'][region]['ssm_managed'] == 0  %}
+                          <td style="text-align:center; color:red">
+                              {{ ec2_data[account]['data'][region]['instance_count'] }}
+                          </td>
+                          <td style="text-align:center; color:black">
+                              {{ ec2_data[account]['data'][region]['ssm_managed'] }}
+                          </td> 
+                          <td style="text-align:center; color:red">
+                              {{ ec2_data[account]['data'][region]['not_ssm_managed'] }}
+                          </td>
+                      {% else %}
+                          <td style="text-align:center; color:#FF9400">
+                              {{ ec2_data[account]['data'][region]['instance_count'] }}
+                          </td>
+                          <td style="text-align:center; color:green">
+                              {{ ec2_data[account]['data'][region]['ssm_managed'] }}
+                          </td> 
+                          <td style="text-align:center; color:red">
+                              {{ ec2_data[account]['data'][region]['not_ssm_managed'] }}
+                          </td>
+                      {% endif %}
+                  {% endif %}
+              </tr>
+              {% endfor %}
+              </table>
+          </td>
+      {% endif %}
+      {% if loop.index % 3 == 0 %}
+          </tr>
+          <tr>
+      {% endif %}
+  {% endfor %}
+  </tr>
+  </table>
+  </br>
+  <p>Last updated: {{ last_update }}</p>
+  <hr>
+</div>
+<!-- end ec2 instances -->
+
+<!-- start patch compliance -->
+
+<div id="{{ project.name|lower }}-patch-compliance" class="tab-pane fade"></br>
+  <h4>{{ project.name }} Patch Compliance</h4>
+  All EC2 instances must be properly patched
+  </br>
+  <table>
+  <tr>
+  {% for account in ec2_data %}
+      {% if ec2_data[account]['data'] %}
+          <td style="padding:30px; vertical-align:top">
+              <a href="/api/v1.1/{{ project.name|lower }}/ec2-instances/{{ ec2_data[account]['env'] }}/details">
+                  <font color="blue"><u><h5>{{ ec2_data[account]['account_name'] }}</u></h5></font>
+              </a>
+              <table border=1>
+              <tr>
+                  <td><strong>Region</strong></td>
+                  <td><strong>Instance Id</strong></td>
+                  <td><strong>Updates Installed</strong></td>
+                  <td><strong>Updates Needed</strong></td>
+              </tr>
+              {% for region in ec2_data[account]['data'] %}
+              {% if ec2_data[account]['data'][region]['instance_count'] == 0 %}
+                  <tr>
+                      <td>
+                          {{ region }}
+                      </td>
+                      <td style="text-align:center; color:black">                            
+                          -
+                      </td>
+                      <td style="text-align:center; color:black">
+                          -
+                      </td>
+                      <td style="text-align:center; color:black">
+                          -
+                      </td> 
+                  </tr>
+              {% else %}
+              {% for instance in ec2_data[account]['data'][region]['instances'] %}
+                  <tr>
+                      <td>
+                          {{ region }}
+                      </td>
+                      <td style="text-align:center; color:black">                            
+                          {{ instance['instance_id'] }}
+                      </td>
+                      {% if instance['compliant_patch_count'] > 0 %}
+                          <td style="text-align:center; color:green">
+                              {{ instance['compliant_patch_count'] }}
+                          </td>
+                      {% else %}
+                          <td style="text-align:center; color:black">
+                              {{ instance['compliant_patch_count'] }}
+                          </td>
+                      {% endif %}
+                      {% if instance['non_compliant_patch_count'] > 0 %}
+                          <td style="text-align:center; color:red">
+                              {{ instance['non_compliant_patch_count'] }}
+                          </td>
+                      {% else %}
+                          <td style="text-align:center; color:black">
+                              {{ instance['non_compliant_patch_count'] }}
+                          </td>
+                      {% endif %}
+                  </tr>
+              {% endfor %}
+              {% endif %}
+              {% endfor %}
+              </table>
+          </td>
+      {% endif %}
+      {% if loop.index % 3 == 0 %}
+          </tr>
+          <tr>
+      {% endif %}
+  {% endfor %}
+  </tr>
+  </table>
+  </br>
+  <p>Last updated: {{ last_update }}</p>
+  <hr>
+</div>
+<!-- end patch compliance -->
+
+</div>
+
+<script>
+  var opts = {
+    lines: 12,
+    angle: 0,
+    lineWidth: 0.44,
+    pointer: {
+      length: 0.7,
+      strokeWidth: 0.035,
+      color: '#000000'
+    },
+    limitMax: 'false',
+    percentColors: [[0.0, '#a9d70b'], [0.50, '#f9c802'], [1.0, '#ff0000']],
+    strokeColor: '#E0E0E0',
+    staticZones: [
+      {strokeStyle: '#F03E3E', min: 0, max: 50},  // Red from 0 to 50
+      {strokeStyle: '#FFDD00', min: 50, max: 80}, // Yellow from 50 to 80
+      {strokeStyle: '#30B32D', min: 80, max: 100} // Green from 80 to 100
+    ],
+    generateGradient: true
+  };
+  
+  {% for item in scores %}
+    var target{{ loop.index }} = document.getElementById('gauge{{ loop.index }}');
+    var gauge{{ loop.index }} = new Gauge(target{{ loop.index }}).setOptions(opts);
+    gauge{{ loop.index }}.maxValue = 100;
+    gauge{{ loop.index }}.animationSpeed = 32;
+    gauge{{ loop.index }}.set({{ scores[item]['data']['overall_score'] }});
+  {% endfor %}
+  
+</script>
+
+<script>
+        $(document).ready(function(){
+        $('a[data-toggle="pill"]').on('show.bs.tab', function(e) {
+            localStorage.setItem('activeTab', $(e.target).attr('href'));
+        });
+        var activeTab = localStorage.getItem('activeTab');
+        if(activeTab){
+            $('#nav-pills a[href="' + activeTab + '"]').tab('show');
+        }
+        });
+    </script>
+    
+    <script>
+        var options = {
+            valueNames: ['rulename', 'resourceId', 'resource_type', 'region', 'accountname']
+        };
+        
+        var complianceList = new List('noncompliance', options);
+    </script>
+
+{% endblock %}

@@ -1,0 +1,51 @@
+{% extends 'layout.html' %}
+{% block content %}
+
+    <img src="../static/img/{{ project|lower }}-logo.png" style="float:left;"/>
+    </br></br>
+    <div class="tab-content">
+        <div id="{{ project|lower }}" class="tab-pane active">            
+            <h4>AWS Resources - {{ account }}</h4>
+            This page shows the AWS resources being used by the <strong>{{ account }}</strong> account ({{ account_number }}).</br>
+            The SC Vamp application makes use of the python <a href="https://github.com/scopely-devops/skew">"skew"</a> module which was developed by Mitch Garnaat (the creator of the AWS python library boto). </br>
+            The "skew" module currently allows us to programatically collect data on resources being used by this AWS Account for the following services:
+            </br></br>
+            {% if not results %}
+                <font color="red">
+                    <strong>No AWS Resources results are available for the {{ account }} account</strong>
+                </font>
+            {% else %}
+                {% for service in results %}
+                    <h3>{{ service }}</h3>
+                    <table style="table-layout:fixed; width:30%; border: 1px solid black;">
+                        <tr>
+                            <th style="border: 1px solid black;">Resource</th>
+                            <th style="border: 1px solid black; text-align:center;">Quantity</th>
+                        </tr>
+                        {% for item in results[service] %}
+                        <tr>
+                            <td style="border: 1px solid black;">
+                                {{ item }}
+                            </td>
+                            <td style="border: 1px solid black; text-align:center;">
+                                {% if results[service][item]|length > 0 %}
+                                    <a href="/api/v1.1/{{ project|lower }}/resources/{{ env }}/{{ service }}/{{ item }}" ><font color="blue"><strong>{{ results[service][item]|length }}</strong></font></a>
+                                {% else %}
+                                    {{ results[service][item]|length }}
+                                {% endif %}
+                            </td>
+                        </tr>
+                        {% endfor %}
+                    </table>
+                    </br>
+                {% endfor %}
+            {% endif %}
+        </div>
+    </div>
+    
+{% endblock %}
+          
+          
+
+
+ 

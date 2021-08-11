@@ -1,0 +1,167 @@
+{% extends "layout.html" %}
+
+{% block content %}
+    <span><img src="/static/img/scventures-identifier.png" style="float:left;"/></span>
+    </br>
+    </br>
+    <h1>Add New Project</h1>
+    <form action="" method="post" novalidate>
+        {{ form.hidden_tag() }}
+        <p>
+            {{ form.project.label }}<br>
+            {{ form.project(size=32) }}<br>
+            {% for error in form.project.errors %}
+            <span style="color: red;">[{{ error }}]</span>
+            {% endfor %}
+        </p>
+        Note that you must fill in the required information for at least the Dev account below.  Tooling and PreProd accounts can be added if required but are not mandatory
+        <p>
+        <table>
+            <tr>
+                <td style="border-right: 2px solid #8bacd9; border-top: 2px solid #8bacd9; border-bottom: 2px solid #8bacd9; border-left: 2px solid #8bacd9; padding:30px"><strong>Development Environment (Mandatory)</strong></td>
+                <td style="border-right: 2px solid #8bacd9; border-top: 2px solid #8bacd9; border-bottom: 2px solid #8bacd9; border-left: 2px solid #8bacd9; padding:30px"><strong>Tooling Environment (Optional)</strong></td>
+                <td style="border-right: 2px solid #8bacd9; border-top: 2px solid #8bacd9; border-bottom: 2px solid #8bacd9; border-left: 2px solid #8bacd9; padding:30px"><strong>PreProd Environment (Optional)</strong></td>
+            </tr> 
+            <tr>
+                <td style="border-right: 2px solid #8bacd9; border-left: 2px solid #8bacd9; padding:10px 30px 10px 30px">
+                    {{ form.dev_account_name.label }}<br>
+                    {{ form.dev_account_name(size=32) }}<br>
+                    {% for error in form.dev_account_name.errors %}
+                        <span style="color: red;">[{{ error }}]</span>
+                    {% endfor %}
+                </td>
+                <td style="border-right: 2px solid #8bacd9; border-left: 2px solid #8bacd9; padding:10px 30px 10px 30px">
+                    {{ form.tooling_account_name.label }}<br>
+                    {{ form.tooling_account_name(size=32) }}<br>
+                    {% for error in form.tooling_account_name.errors %}
+                        <span style="color: red;">[{{ error }}]</span>
+                    {% endfor %}
+                </td>
+                <td style="border-right: 2px solid #8bacd9; border-left: 2px solid #8bacd9; padding:10px 30px 10px 30px">
+                    {{ form.pre_prod_account_name.label }}<br>
+                    {{ form.pre_prod_account_name(size=32) }}<br>
+                    {% for error in form.pre_prod_account_name.errors %}
+                        <span style="color: red;">[{{ error }}]</span>
+                    {% endfor %}
+                </td>
+            </tr>
+            <tr>
+                <td style="border-right: 2px solid #8bacd9; border-left: 2px solid #8bacd9; padding:10px 30px 10px 30px">
+                    {{ form.dev_account_number.label }}<br>
+                    {{ form.dev_account_number(size=32) }}<br>
+                    {% for error in form.dev_account_number.errors %}
+                        <span style="color: red;">[{{ error }}]</span>
+                    {% endfor %}
+                </td>
+                <td style="border-right: 2px solid #8bacd9; border-left: 2px solid #8bacd9; padding:10px 30px 10px 30px">
+                    {{ form.tooling_account_number.label }}<br>
+                    {{ form.tooling_account_number(size=32) }}<br>
+                    {% for error in form.tooling_account_number.errors %}
+                        <span style="color: red;">[{{ error }}]</span>
+                    {% endfor %}
+                </td>
+                <td style="border-right: 2px solid #8bacd9; border-left: 2px solid #8bacd9; padding:10px 30px 10px 30px">
+                    {{ form.pre_prod_account_number.label }}<br>
+                    {{ form.pre_prod_account_number(size=32) }}<br>
+                    {% for error in form.pre_prod_account_number.errors %}
+                        <span style="color: red;">[{{ error }}]</span>
+                    {% endfor %}
+                </td>
+            </tr>
+            <tr>
+                <td style="border-right: 2px solid #8bacd9; border-left: 2px solid #8bacd9; padding:10px 30px 10px 30px">
+                    {{ form.dev_account_region.label }}<br>
+                    {{ form.dev_account_region(size=1) }}<br>
+                    {% for error in form.dev_account_region.errors %}
+                        <span style="color: red;">[{{ error }}]</span>
+                    {% endfor %}
+                </td>
+                <td style="border-right: 2px solid #8bacd9; border-left: 2px solid #8bacd9; padding:10px 30px 10px 30px">
+                    {{ form.tooling_account_region.label }}<br>
+                    {{ form.tooling_account_region(size=1) }}<br>
+                    {% for error in form.tooling_account_region.errors %}
+                        <span style="color: red;">[{{ error }}]</span>
+                    {% endfor %}
+                </td>
+                <td style="border-right: 2px solid #8bacd9; border-left: 2px solid #8bacd9; padding:10px 30px 10px 30px">
+                    {{ form.pre_prod_account_region.label }}<br>
+                    {{ form.pre_prod_account_region(size=1) }}<br>
+                    {% for error in form.pre_prod_account_region.errors %}
+                        <span style="color: red;">[{{ error }}]</span>
+                    {% endfor %}
+                </td>
+            </tr>
+            <tr>
+                <td style="border-right: 2px solid #8bacd9; border-left: 2px solid #8bacd9; padding:10px 30px 10px 30px">
+                    {{ form.dev_profile_name.label }}<br>
+                    {{ form.dev_profile_name(size=32) }}<br>
+                    {% for error in form.dev_profile_name.errors %}
+                        <span style="color: red;">[{{ error }}]</span>
+                    {% endfor %}
+                </td>
+                <td style="border-right: 2px solid #8bacd9; border-left: 2px solid #8bacd9; padding:10px 30px 10px 30px">
+                    {{ form.tooling_profile_name.label }}<br>
+                    {{ form.tooling_profile_name(size=32) }}<br>
+                    {% for error in form.tooling_profile_name.errors %}
+                        <span style="color: red;">[{{ error }}]</span>
+                    {% endfor %}
+                </td>
+                <td style="border-right: 2px solid #8bacd9; border-left: 2px solid #8bacd9; padding:10px 30px 10px 30px">
+                    {{ form.pre_prod_profile_name.label }}<br>
+                    {{ form.pre_prod_profile_name(size=32) }}<br>
+                    {% for error in form.pre_prod_profile_name.errors %}
+                        <span style="color: red;">[{{ error }}]</span>
+                    {% endfor %}
+                </td>
+            </tr>
+            </tr>
+                <td style="border-right: 2px solid #8bacd9; border-left: 2px solid #8bacd9; padding:10px 30px 10px 30px">
+                    {{ form.dev_access_key.label }}<br>
+                    {{ form.dev_access_key(size=32) }}<br>
+                    {% for error in form.dev_access_key.errors %}
+                        <span style="color: red;">[{{ error }}]</span>
+                    {% endfor %}
+                </td>
+                <td style="border-right: 2px solid #8bacd9; border-left: 2px solid #8bacd9; padding:10px 30px 10px 30px">
+                    {{ form.tooling_access_key.label }}<br>
+                    {{ form.tooling_access_key(size=32) }}<br>
+                    {% for error in form.tooling_access_key.errors %}
+                        <span style="color: red;">[{{ error }}]</span>
+                    {% endfor %}
+                </td>
+                <td style="border-right: 2px solid #8bacd9; border-left: 2px solid #8bacd9; padding:10px 30px 10px 30px">
+                    {{ form.pre_prod_access_key.label }}<br>
+                    {{ form.pre_prod_access_key(size=32) }}<br>
+                    {% for error in form.pre_prod_access_key.errors %}
+                        <span style="color: red;">[{{ error }}]</span>
+                    {% endfor %}
+                </td>
+            </tr>
+            </tr>
+                <td style="border-right: 2px solid #8bacd9; border-left: 2px solid #8bacd9; border-bottom: 2px solid #8bacd9; padding:10px 30px 10px 30px">
+                    {{ form.dev_secret_access_key.label }}<br>
+                    {{ form.dev_secret_access_key(size=32) }}<br>
+                    {% for error in form.dev_secret_access_key.errors %}
+                        <span style="color: red;">[{{ error }}]</span>
+                    {% endfor %}
+                </td>
+                <td style="border-right: 2px solid #8bacd9; border-left: 2px solid #8bacd9; border-bottom: 2px solid #8bacd9; padding:10px 30px 10px 30px">
+                    {{ form.tooling_secret_access_key.label }}<br>
+                    {{ form.tooling_secret_access_key(size=32) }}<br>
+                    {% for error in form.tooling_secret_access_key.errors %}
+                        <span style="color: red;">[{{ error }}]</span>
+                    {% endfor %}
+                </td>
+                <td style="border-right: 2px solid #8bacd9; border-left: 2px solid #8bacd9; border-bottom: 2px solid #8bacd9; padding:10px 30px 10px 30px">
+                    {{ form.pre_prod_secret_access_key.label }}<br>
+                    {{ form.pre_prod_secret_access_key(size=32) }}<br>
+                    {% for error in form.pre_prod_secret_access_key.errors %}
+                        <span style="color: red;">[{{ error }}]</span>
+                    {% endfor %}
+                </td>
+            </tr>
+        </table>
+        </p>
+        <p>{{ form.submit() }}</p>
+    </form>
+{% endblock %}

@@ -1,0 +1,40 @@
+{% extends "layout.html" %}
+
+{% block content %}
+    <span><img src="/static/img/scventures-identifier.png" style="float:left;"/></span>
+    </br>
+    </br>
+    <h1>Delete Account</h1>
+    <form action="" method="post" novalidate>
+        {{ form.hidden_tag() }}
+        <p>
+            {{ form.project.label }}<br>
+            {{ form.project(size=1) }}<br>
+            {% for error in form.project.errors %}
+            <span style="color: red;">[{{ error }}]</span>
+            {% endfor %}
+        </p>
+        <p>
+            {{ form.account_name.label }}<br>
+            {{ form.account_name(size=32) }}<br>
+            {% for error in form.account_name.errors %}
+            <span style="color: red;">[{{ error }}]</span>
+            {% endfor %}
+        </p>
+        <p>
+            {{ form.account_number.label }}<br>
+            {{ form.account_number(size=32) }}<br>
+            {% for error in form.account_number.errors %}
+            <span style="color: red;">[{{ error }}]</span>
+            {% endfor %}
+        </p>
+        <p>
+            {{ form.profile_name.label }}<br>
+            {{ form.profile_name(size=32) }}<br>
+            {% for error in form.profile_name.errors %}
+            <span style="color: red;">[{{ error }}]</span>
+            {% endfor %}
+        </p>
+        <p>{{ form.submit() }}</p>
+    </form>
+{% endblock %}

@@ -1,0 +1,86 @@
+{% extends "layout.html" %}
+
+{% block content %}
+    <span><img src="/static/img/scventures-identifier.png" style="float:left;"/></span>
+    </br>
+    </br>
+    <h1>Add New Account</h1>
+    <form action="" method="post" novalidate>
+        {{ form.hidden_tag() }}
+        <p>
+            {{ form.project.label }}<br>
+            {{ form.project(size=1) }}<br>
+            {% for error in form.project.errors %}
+            <span style="color: red;">[{{ error }}]</span>
+            {% endfor %}
+        <table>
+            <tr>
+                <td style="border-right: 2px solid #8bacd9; border-top: 2px solid #8bacd9; border-bottom: 2px solid #8bacd9; border-left: 2px solid #8bacd9; padding:30px"><strong>New Account Details</strong></td>
+            </tr> 
+            <tr>
+                <td style="border-right: 2px solid #8bacd9; border-left: 2px solid #8bacd9; padding:10px 30px 10px 30px">
+                    {{ form.account_env.label }}<br>
+                    {{ form.account_env(size=32) }}<br>
+                    {% for error in form.account_env.errors %}
+                        <span style="color: red;">[{{ error }}]</span>
+                    {% endfor %}
+                </td>
+            </tr>
+            <tr>
+                <td style="border-right: 2px solid #8bacd9; border-left: 2px solid #8bacd9; padding:10px 30px 10px 30px">
+                    {{ form.account_name.label }}<br>
+                    {{ form.account_name(size=32) }}<br>
+                    {% for error in form.account_name.errors %}
+                        <span style="color: red;">[{{ error }}]</span>
+                    {% endfor %}
+                </td>
+            </tr>
+            <tr>
+                <td style="border-right: 2px solid #8bacd9; border-left: 2px solid #8bacd9; padding:10px 30px 10px 30px">
+                    {{ form.account_number.label }}<br>
+                    {{ form.account_number(size=32) }}<br>
+                    {% for error in form.account_number.errors %}
+                        <span style="color: red;">[{{ error }}]</span>
+                    {% endfor %}
+                </td>
+            </tr>
+            <tr>
+                <td style="border-right: 2px solid #8bacd9; border-left: 2px solid #8bacd9; padding:10px 30px 10px 30px">
+                    {{ form.account_region.label }}<br>
+                    {{ form.account_region(size=1) }}<br>
+                    {% for error in form.account_region.errors %}
+                        <span style="color: red;">[{{ error }}]</span>
+                    {% endfor %}
+                </td>
+            </tr>
+           <tr>
+                <td style="border-right: 2px solid #8bacd9; border-left: 2px solid #8bacd9; padding:10px 30px 10px 30px">
+                    {{ form.profile_name.label }}<br>
+                    {{ form.profile_name(size=32) }}<br>
+                    {% for error in form.profile_name.errors %}
+                        <span style="color: red;">[{{ error }}]</span>
+                    {% endfor %}
+                </td>
+            </tr>
+            </tr>
+                <td style="border-right: 2px solid #8bacd9; border-left: 2px solid #8bacd9; padding:10px 30px 10px 30px">
+                    {{ form.access_key.label }}<br>
+                    {{ form.access_key(size=32) }}<br>
+                    {% for error in form.access_key.errors %}
+                        <span style="color: red;">[{{ error }}]</span>
+                    {% endfor %}
+                </td>
+            </tr>
+                <td style="border-right: 2px solid #8bacd9; border-left: 2px solid #8bacd9; border-bottom: 2px solid #8bacd9; padding:10px 30px 10px 30px">
+                    {{ form.secret_access_key.label }}<br>
+                    {{ form.secret_access_key(size=32) }}<br>
+                    {% for error in form.secret_access_key.errors %}
+                        <span style="color: red;">[{{ error }}]</span>
+                    {% endfor %}
+                </td>
+            </tr>
+        </table>
+        </p>
+        <p>{{ form.submit() }}</p>
+    </form>
+{% endblock %}

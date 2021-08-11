@@ -1,0 +1,35 @@
+{% extends "layout.html" %}
+
+{% block content %}
+    <span><img src="/static/img/scventures-identifier.png" style="float:left;"/></span>
+    </br>
+    </br>
+    <h1>Current Users</h1>
+    The following table shows currently registered usernames, their role and the projects they are authorised to access:
+    </br></br>
+    <table border=1>
+        <thead>
+            <tr>
+                <td>
+                    <h4>Username</h4>
+                </td>
+                <td>
+                    <h4>Role</h4>
+                </td>
+                <td>
+                    <h4>Projects</h4>
+                </td>
+            </tr>
+        </thead>
+        <tbody class="list">
+        {% for user in users %}
+            <tr>
+                <td>{{ user.username }}</td>
+                <td>{{ "Administrator" if user.isAdmin else 'User' }}</td>
+                <td>{{ user.projects|map(attribute='name')|join(', ') }}</td>
+            <tr>
+        {% endfor %}
+        </tbody>
+    </table>
+
+{% endblock %}

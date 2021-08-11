@@ -1,0 +1,26 @@
+{% extends "layout.html" %}
+
+{% block content %}
+    <span><img src="/static/img/scventures-identifier.png" style="float:left;"/></span>
+    </br>
+    </br>
+    <h1>Delete Project</h1>
+    <form action="" method="post" novalidate>
+        {{ form.hidden_tag() }}
+        <p>
+            {{ form.project.label }}<br>
+            {{ form.project(size=32) }}<br>
+            {% for error in form.project.errors %}
+            <span style="color: red;">[{{ error }}]</span>
+            {% endfor %}
+        </p>
+        <p>
+            {{ form.project_confirm.label }}<br>
+            {{ form.project_confirm(size=32) }}<br>
+            {% for error in form.project_confirm.errors %}
+            <span style="color: red;">[{{ error }}]</span>
+            {% endfor %}
+        </p>
+        <p>{{ form.submit() }}</p>
+    </form>
+{% endblock %}
