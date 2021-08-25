@@ -8,8 +8,6 @@ import flask_login
 from db import db
 from db_models import UserModel, init_db
 
-import pymysql
-pymysql.install_as_MySQLdb()
 
 
 class User(flask_login.UserMixin):

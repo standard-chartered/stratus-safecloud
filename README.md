@@ -185,7 +185,3 @@ it could be improved, please do nto hesitate to contact me.
 **Name:**      James Lian
 
 **Email:**      james.lian@sc.com
-
-***
-
-

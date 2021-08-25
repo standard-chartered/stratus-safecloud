@@ -13,3 +13,6 @@ venv/
 .skew
 *.db
 scvamp.code-workspace
+.python-version
+
+.env
