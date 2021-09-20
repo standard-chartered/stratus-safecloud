@@ -4,7 +4,9 @@
 <script src="/static/js/gauge.min.js"></script>
 <script src="/static/js/list.js"></script>
 
-<img src="/static/img/projects/{{ project.name|lower }}-logo.png" style="float:left;" />
+{% set projectname = project.name|lower|replace(" ","-")%}
+
+<img src="/static/img/projects/{{ projectname }}-logo.png" style="float:left;" />
 </br>
 </br>
 <h4>{{ project.name }} - Project Description</h4>
@@ -27,25 +29,26 @@
 </div>
 <hr>
 
+
 <!-- Nav pills -->
 <ul class="nav nav-pills" id="nav-pills" role="tablist">
   <li class="nav-item">
-    <a class="nav-link active" data-toggle="pill" href="#{{ project.name|lower }}-security">AWS Platform Security</a>
+    <a class="nav-link active" data-toggle="pill" href="#{{ projectname }}-security">AWS Platform Security</a>
   </li>
   <li class="nav-item">
-    <a class="nav-link" data-toggle="pill" href="#{{ project.name|lower }}-resources">AWS Resources</a>
+    <a class="nav-link" data-toggle="pill" href="#{{ projectname }}-resources">AWS Resources</a>
   </li>
   <li class="nav-item">
-    <a class="nav-link" data-toggle="pill" href="#{{ project.name|lower }}-trusted-advisor">AWS Trusted Advisor</a>
+    <a class="nav-link" data-toggle="pill" href="#{{ projectname }}-trusted-advisor">AWS Trusted Advisor</a>
   </li>
   <li class="nav-item">
-    <a class="nav-link" data-toggle="pill" href="#{{ project.name|lower }}-config">AWS Config</a>
+    <a class="nav-link" data-toggle="pill" href="#{{ projectname }}-config">AWS Config</a>
   </li>
   <li class="nav-item">
-    <a class="nav-link" data-toggle="pill" href="#{{ project.name|lower }}-ec2-instances">EC2 Instances</a>
+    <a class="nav-link" data-toggle="pill" href="#{{ projectname }}-ec2-instances">EC2 Instances</a>
   </li>
   <li class="nav-item">
-    <a class="nav-link" data-toggle="pill" href="#{{ project.name|lower }}-patch-compliance">Patch Compliance</a>
+    <a class="nav-link" data-toggle="pill" href="#{{ projectname }}-patch-compliance">Patch Compliance</a>
   </li>
 </ul>
 
@@ -53,7 +56,7 @@
 <div class="tab-content">
 
   <!-- start platform security -->
-  <div id="{{ project.name|lower }}-security" class="tab-pane active"></br>
+  <div id="{{ projectname }}-security" class="tab-pane active"></br>
     <h4>{{ project.name }} AWS Platform Security</h4>
     The following gauges show the score for each {{ project.name }} AWS Account measured against the following security
     standards:
@@ -109,7 +112,7 @@
   <!-- end platform security -->
 
   <!-- start resources -->
-  <div id="{{ project.name|lower }}-resources" class="tab-pane fade"></br>
+  <div id="{{ projectname }}-resources" class="tab-pane fade"></br>
     <h4>{{ project.name }} AWS Resources</h4>
     Click on the following links to see the resource usage for the {{ project.name }} project AWS accounts:
     </br></br>
@@ -127,7 +130,7 @@
   <!-- end resources -->
 
   <!-- start trusted advisor -->
-  <div id="{{ project.name|lower }}-trusted-advisor" class="tab-pane fade"></br>
+  <div id="{{ projectname }}-trusted-advisor" class="tab-pane fade"></br>
     <h4>{{ project.name }} AWS Trusted Advisor</h4>
     Note that any AWS Account names shown in red below are not subscribed to AWS Premium Support and therefore cannot
     access Trusted Advisor data.
@@ -233,7 +236,7 @@
 
 
 <!-- start aws config -->
-<div id="{{ project.name|lower }}-config" class="tab-pane fade"></br>            
+<div id="{{ projectname }}-config" class="tab-pane fade"></br>            
   <div id="noncompliance">
       <table border=1>
       <thead>
@@ -292,7 +295,7 @@
 
 <!-- start ec2 instances -->
 
-<div id="{{ project.name|lower }}-ec2-instances" class="tab-pane fade"></br>
+<div id="{{ projectname }}-ec2-instances" class="tab-pane fade"></br>
   <h4>{{ project.name }} EC2 Instances</h4>
   All EC2 instances must be in approved AWS regions and must be managed by the AWS Systems Manager service (SSM)
   </br></br>
@@ -384,7 +387,7 @@
 
 <!-- start patch compliance -->
 
-<div id="{{ project.name|lower }}-patch-compliance" class="tab-pane fade"></br>
+<div id="{{ projectname }}-patch-compliance" class="tab-pane fade"></br>
   <h4>{{ project.name }} Patch Compliance</h4>
   All EC2 instances must be properly patched
   </br>
