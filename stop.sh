@@ -1,7 +1,7 @@
 #!/bin/bash
 
 if [ -f ./vamp.pid ]; then
-    PID=$(cat ./vamp.pid)
+    PID=$(cat ./ssc.pid)
 else
     PID=$(ps -ef | awk '/venv\/bin\/python/{ print $2 }')
 fi

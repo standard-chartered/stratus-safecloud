@@ -19,7 +19,7 @@ class UserModel( db.Model, UserMixin):
     username = db.Column(db.String(64), unique=True, index=True)
     password = db.Column(db.String(128))
     isAdmin = db.Column(db.Boolean)
-    projects = db.relationship("ProjectModel", secondary=association_table, viewonly=True)
+    projects = db.relationship("ProjectModel", secondary=association_table, back_populates="users")
 
 
 class ProjectModel( db.Model):
@@ -29,7 +29,7 @@ class ProjectModel( db.Model):
 
     contacts = db.relationship("ContactModel")
     aws_accounts = db.relationship("AwsAccountModel")
-    users = db.relationship("UserModel", secondary=association_table)
+    users = db.relationship("UserModel", secondary=association_table, back_populates="projects")
 
 class ContactModel(db.Model):
     __tablename__ = 'contact'
@@ -101,8 +101,6 @@ def init_db():
 
 
 if __name__ == "__main__":
-    
-
     # load dotenv in the base root
     APP_ROOT = os.path.dirname(__file__)   # refers to application_top
     dotenv_path = os.path.join(APP_ROOT, '.env')
@@ -122,64 +120,10 @@ if __name__ == "__main__":
 
     app.app_context().push()
 
-    db.drop_all()
+    # db.drop_all()
     db.create_all()
 
+
+
     
-    project_folder_env_name='SSC_PROJ_DIR'
-
-    project_folder_path = os.environ[project_folder_env_name]
-
-    dir_path = '{}/users.py'.format(project_folder_path)
-    import importlib.util
-    spec = importlib.util.spec_from_file_location("projectconfig", dir_path)
-    foo = importlib.util.module_from_spec(spec)
-    spec.loader.exec_module(foo)
-    
-
-    # # todo need to revise for upcoming migration
-    for user in foo.USERS:
-        password = foo.USERS[user]['password']
-        role = foo.USERS[user]['role']
-        isAdmin = False
-        if role == 'Administrator':
-            isAdmin = True
-        dbUser = UserModel(username=user, password=password,isAdmin=isAdmin)
-        db.session.add(dbUser)
-        db.session.commit()
-    
-
-    for dir in os.listdir(path='{}/projects'.format(project_folder_path)):
-        if dir != '__pycache__':
-            dir_path = '{}/projects/{}/config.py'.format(project_folder_path,dir)
-            # insert project entry
-
-            import importlib.util
-            spec = importlib.util.spec_from_file_location("projectconfig", dir_path)
-            foo = importlib.util.module_from_spec(spec)
-            spec.loader.exec_module(foo)
-
-            project_names = ['Aladdin','Autumn','CardsPal','Liberty','Litmus','Lydia','Phoenix','Smile','SolvKenyaDev','ZodiaMarkets', 'SCVentures']
-            project_name = ''
-            for name in project_names:
-                if name.lower() == dir.lower():
-                    project_name = name
-            
-            if project_name == '':
-                project_name = 'SC Ventures'
-
-            
-            project = ProjectModel(name=project_name)
-            aws_accounts = get_aws_accounts(foo.AWS_ACCOUNTS)
-            contacts = get_contacts(foo.CONTACTS)
-            authorised_users = get_authorised_users(foo.AUTHORISED_VIEWERS)
-            project.aws_accounts.extend(aws_accounts)
-            project.contacts.extend(contacts)
-            project.users.extend(authorised_users)
-
-            db.session.add(project)
-            db.session.commit()
-        
-
-    print ("Done!")
 
