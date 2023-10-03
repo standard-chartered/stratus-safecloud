@@ -1,5 +1,5 @@
 boto3>=1.14.34
-urllib3==1.26.5
+urllib3==1.26.17
 pyYAML==5.4
 docopt==0.6.2
 Flask-Login==0.5.0
